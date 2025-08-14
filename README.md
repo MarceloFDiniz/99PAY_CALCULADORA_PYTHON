@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32-ff4b4b?style=for-the-badge&logo=streamlit)
 ![Pandas](https://img.shields.io/badge/Pandas-2.2-150458?style=for-the-badge&logo=pandas)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-orange?style=for-the-badge)
 
 Uma calculadora interativa e visual para simular os rendimentos compostos diários da carteira digital 99Pay. Descubra o potencial do seu dinheiro com base nas regras de rendimento específicas da plataforma.
 
@@ -112,7 +112,11 @@ Contribuições são bem-vindas! Se você tem sugestões de melhorias, novas fun
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+Este projeto está licenciado sob a **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
+
+Isso significa que você é livre para compartilhar e adaptar o código para **fins não comerciais**, desde que dê o crédito apropriado e licencie suas modificações sob os mesmos termos.
+
+Para uso comercial, por favor, entre em contato com o autor para obter uma licença apropriada. Veja o arquivo `LICENSE` para mais detalhes.
 
 ---
 
