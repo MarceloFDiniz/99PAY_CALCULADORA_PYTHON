@@ -103,50 +103,8 @@ with st.sidebar:
         # Define o valor inicial para o bônus no estado da sessão
         st.session_state.bonus_percent = 0.0
 
-    # Inputs
-    initial_investment = st.number_input(
-        "Valor Investido (R$)",
-        min_value=0.01,
-        value=None,
-        placeholder="Ex: 5000.00",
-        step=100.0,
-        key="initial_investment"
-    )
-    
-    bonus_percent = st.number_input(
-        "Bônus Adicional (%)",
-        min_value=0.0,
-        # O valor é lido diretamente de st.session_state.bonus_percent via a 'key'
-        step=1.0,
-        key="bonus_percent"
-    )
-    
-    days = st.number_input(
-        "Período (em dias)",
-        min_value=1,
-        value=None,
-        placeholder="Ex: 365",
-        step=1,
-        key="days"
-    )
-            
     def reset_cdi_callback():
         st.session_state.cdi_rate = DEFAULT_CDI
-        
-    annual_cdi_percent = st.number_input(
-        "Taxa CDI Anual (%)",
-        min_value=0.01,
-        step=0.01,
-        key='cdi_rate'
-    )
-    
-    st.button(
-        f"Redefinir CDI para {DEFAULT_CDI}%",
-        on_click=reset_cdi_callback,
-        use_container_width=True
-    )
-    
-    st.markdown("---")
 
     def clear_simulation_callback():
         """Reseta os campos do formulário para o estado inicial."""
@@ -155,11 +113,45 @@ with st.sidebar:
         st.session_state.bonus_percent = 0.0
         st.session_state.cdi_rate = DEFAULT_CDI
 
-    col1, col2 = st.columns(2)
-    with col1:
-        calculate_button = st.button("Calcular Rendimento", type="primary", use_container_width=True)
-    with col2:
-        st.button("Limpar Simulação", on_click=clear_simulation_callback, use_container_width=True)
+    with st.form(key="simulation_form"):
+        # Inputs
+        initial_investment = st.number_input(
+            "Valor Investido (R$)",
+            min_value=0.01,
+            value=None,
+            placeholder="Ex: 5000.00",
+            step=100.0,
+            key="initial_investment"
+        )
+        
+        bonus_percent = st.number_input(
+            "Bônus Adicional (%)",
+            min_value=0.0,
+            step=1.0,
+            key="bonus_percent"
+        )
+        
+        days = st.number_input(
+            "Período (em dias)",
+            min_value=1,
+            value=None,
+            placeholder="Ex: 365",
+            step=1,
+            key="days"
+        )
+                
+        annual_cdi_percent = st.number_input(
+            "Taxa CDI Anual (%)",
+            min_value=0.01,
+            step=0.01,
+            key='cdi_rate'
+        )
+        
+        st.markdown("---")
+        calculate_button = st.form_submit_button("Calcular Rendimento", type="primary", use_container_width=True)
+
+    st.button(f"Redefinir CDI para {DEFAULT_CDI}%", on_click=reset_cdi_callback, use_container_width=True)
+    st.button("Limpar Simulação", on_click=clear_simulation_callback, use_container_width=True)
 
 # --- Resultados ---
 if calculate_button:
