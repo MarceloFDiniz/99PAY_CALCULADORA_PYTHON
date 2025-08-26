@@ -235,7 +235,7 @@ if calculate_button:
             y=alt.Y('Valor:Q', 
                     title='Valor Acumulado (R$)',
                     axis=alt.Axis(format='$.2f'),
-                    scale=alt.Scale(nice=True)),
+                    scale=alt.Scale(nice=True, zero=False)),
                     
             color=alt.Color('Investimento:N', 
                            legend=alt.Legend(title="Tipo de Investimento"),
