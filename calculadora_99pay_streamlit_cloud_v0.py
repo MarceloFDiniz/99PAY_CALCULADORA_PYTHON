@@ -27,7 +27,7 @@ def format_period(days: int) -> str:
         return f"{years} ano{'s' if years > 1 else ''}"
 
     # Meses (aproximado)
-    if days == 31: # Caso especial para 1 mês
+    if days == 31:  # Caso especial para 1 mês
         return "1 mês"
     if days % 30 == 0:
         months = days // 30
@@ -51,7 +51,7 @@ def calculate_daily_savings_values(initial_value: float, days: int) -> list[floa
     monthly_rate = 0.005
     daily_values = []
     current_value = initial_value
-    
+
     for day in range(1, days + 1):
         if day % 30 == 0:
             current_value *= (1 + monthly_rate)
@@ -71,11 +71,11 @@ def calculate_99pay_returns(initial_investment: float, days: int, annual_cdi_per
         day_start_value = current_value
         tier1_value = min(day_start_value, 5000.0)
         tier2_value = max(0, day_start_value - 5000.0)
-        
+
         tier1_yield = tier1_value * daily_cdi * tier1_rate
         tier2_yield = tier2_value * daily_cdi * 0.80
         total_daily_yield = tier1_yield + tier2_yield
-        
+
         current_value += total_daily_yield
         daily_data.append({
             "Dia": day,
@@ -94,13 +94,12 @@ st.markdown("Esta é uma versão em Python/Streamlit da calculadora, que simula 
 # --- Barra Lateral ---
 with st.sidebar:
     st.header("Parâmetros da Simulação")
-    
+
     # Inicialização dos estados para os inputs
     DEFAULT_CDI = 14.90
     if 'cdi_rate' not in st.session_state:
         st.session_state.cdi_rate = DEFAULT_CDI
     if 'bonus_percent' not in st.session_state:
-        # Define o valor inicial para o bônus no estado da sessão
         st.session_state.bonus_percent = 0.0
 
     with st.form(key="simulation_form"):
@@ -110,17 +109,19 @@ with st.sidebar:
             min_value=0.01,
             value=None,
             placeholder="Ex: 5000.00",
-            step=100.0,
+            step=0.01,                 # << antes 100.0
+            format="%.2f",             # << garante digitação livre e exibição 2 casas
             key="initial_investment"
         )
-        
+
         bonus_percent = st.number_input(
             "Bônus Adicional (%)",
             min_value=0.0,
-            step=1.0,
+            step=0.01,                 # << antes 1.0
+            format="%.2f",
             key="bonus_percent"
         )
-        
+
         days = st.number_input(
             "Período (em dias)",
             min_value=1,
@@ -129,14 +130,16 @@ with st.sidebar:
             step=1,
             key="days"
         )
-                
+
         annual_cdi_percent = st.number_input(
             "Taxa CDI Anual (%)",
             min_value=0.01,
+            value=float(st.session_state.cdi_rate),  # << alinha com Session State (remove aviso)
             step=0.01,
+            format="%.2f",
             key='cdi_rate'
         )
-        
+
         st.markdown("---")
         calculate_button = st.form_submit_button("Calcular Rendimento", type="primary", use_container_width=True)
 
@@ -153,7 +156,6 @@ with st.sidebar:
         st.rerun()
 
 # --- Resultados ---
-# A lógica de exibição dos resultados permanece a mesma
 if calculate_button:
     if not initial_investment or not days:
         st.error("Por favor, preencha os campos 'Valor Investido' e 'Período' para continuar.", icon="🚨")
@@ -173,20 +175,18 @@ if calculate_button:
         # --- Cards de Resumo ---
         st.header("Resumo da Simulação")
         col1, col2, col3, col4, col5 = st.columns(5)
-        
+
         col1.metric("Tempo do Investimento", format_period(days))
         col2.metric("Valor Investido", format_currency(initial_investment))
         col3.metric("Valor Final", format_currency(final_value))
 
-        # Lógica para colorir os deltas das métricas de forma comparativa
-        pay_color = "normal"  # Verde por padrão (para rendimento positivo)
+        pay_color = "normal"
         savings_color = "normal"
         if days >= 30:
             if percent_yield > savings_percent_yield:
-                savings_color = "inverse"  # Vermelho para o menor rendimento
+                savings_color = "inverse"
             elif savings_percent_yield > percent_yield:
-                pay_color = "inverse"  # Vermelho para o menor rendimento
-            # Se forem iguais, ambos permanecem "normal" (verde)
+                pay_color = "inverse"
 
         col4.metric(
             "Rendimento Total (99Pay)",
@@ -201,7 +201,7 @@ if calculate_button:
                 format_currency(savings_yield),
                 f"{savings_percent_yield:.2f}%",
                 delta_color=savings_color,
-                help="Estimativa com rendimento de 0.5% a.m. e sem considerar a Taxa Referencial (TR)."
+                help="Estimativa com rendimento de 0.5% a.m. e sem considerar a TR."
             )
         else:
             col5.metric(
@@ -232,7 +232,6 @@ if calculate_button:
             })
             all_chart_data.append(savings_chart)
 
-        # Combinação final dos dados
         final_chart_df = pd.concat(all_chart_data, ignore_index=True)
         final_chart_df = final_chart_df.assign(
             Dia=pd.to_numeric(final_chart_df['Dia'], errors='coerce').astype(int),
@@ -240,21 +239,17 @@ if calculate_button:
             Investimento=final_chart_df['Investimento'].astype(str)
         ).dropna().sort_values(['Dia', 'Investimento'])
 
-        # Criação do gráfico
         chart = alt.Chart(final_chart_df).mark_line(point=True).encode(
-            x=alt.X('Dia:Q', 
+            x=alt.X('Dia:Q',
                     title='Dia do Investimento',
                     axis=alt.Axis(format='d', labelFlush=True)),
-            
-            y=alt.Y('Valor:Q', 
+            y=alt.Y('Valor:Q',
                     title='Valor Acumulado (R$)',
                     axis=alt.Axis(format='$.2f'),
                     scale=alt.Scale(nice=True, zero=False)),
-                    
-            color=alt.Color('Investimento:N', 
-                           legend=alt.Legend(title="Tipo de Investimento"),
-                           scale=alt.Scale(scheme='category10')),
-            
+            color=alt.Color('Investimento:N',
+                            legend=alt.Legend(title="Tipo de Investimento"),
+                            scale=alt.Scale(scheme='category10')),
             tooltip=[
                 alt.Tooltip('Dia', title='Dia'),
                 alt.Tooltip('Investimento', title='Tipo'),
