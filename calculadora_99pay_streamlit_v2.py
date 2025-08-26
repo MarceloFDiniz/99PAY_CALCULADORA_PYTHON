@@ -103,6 +103,17 @@ with st.sidebar:
         # Define o valor inicial para o bônus no estado da sessão
         st.session_state.bonus_percent = 0.0
 
+    def reset_cdi_callback():
+        """Reseta a taxa CDI para o valor padrão."""
+        st.session_state.cdi_rate = DEFAULT_CDI
+
+    def clear_simulation_callback():
+        """Reseta os campos do formulário para o estado inicial."""
+        st.session_state.initial_investment = None
+        st.session_state.days = None
+        st.session_state.bonus_percent = 0.0
+        st.session_state.cdi_rate = DEFAULT_CDI
+
     with st.form(key="simulation_form"):
         # Inputs
         initial_investment = st.number_input(
@@ -139,19 +150,10 @@ with st.sidebar:
         
         st.markdown("---")
         calculate_button = st.form_submit_button("Calcular Rendimento", type="primary", use_container_width=True)
-    
-    # Botões de ação fora do formulário, usando lógica de clique direto sem callbacks
-    if st.button(f"Redefinir CDI para {DEFAULT_CDI}%", use_container_width=True):
-        st.session_state.cdi_rate = DEFAULT_CDI
-        st.rerun()
 
-    if st.button("Limpar Simulação", use_container_width=True):
-        """Reseta os campos do formulário para o estado inicial."""
-        st.session_state.initial_investment = None
-        st.session_state.days = None
-        st.session_state.bonus_percent = 0.0
-        st.session_state.cdi_rate = DEFAULT_CDI
-        st.rerun()
+    # Botões de ação fora do formulário, usando callbacks
+    st.button(f"Redefinir CDI para {DEFAULT_CDI}%", on_click=reset_cdi_callback, use_container_width=True)
+    st.button("Limpar Simulação", on_click=clear_simulation_callback, use_container_width=True)
 
 # --- Resultados ---
 # A lógica de exibição dos resultados permanece a mesma
