@@ -110,7 +110,6 @@ with st.sidebar:
         value=None,
         placeholder="Ex: 5000.00",
         step=100.0,
-        format="%.2f",
         key="initial_investment"
     )
     
@@ -119,7 +118,6 @@ with st.sidebar:
         min_value=0.0,
         # O valor é lido diretamente de st.session_state.bonus_percent via a 'key'
         step=1.0,
-        format="%.1f",
         key="bonus_percent"
     )
     
