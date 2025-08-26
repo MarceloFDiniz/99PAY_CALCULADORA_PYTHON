@@ -14,6 +14,33 @@ def format_currency(value: float) -> str:
     """Formata um número para o padrão monetário brasileiro (R$)."""
     return f"R$ {value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
+def format_period(days: int) -> str:
+    """Formata um período em dias para uma string mais amigável (semanas, meses, anos)."""
+    if days <= 0:
+        return f"{days} dias"
+    if days == 1:
+        return "1 dia"
+
+    # Anos exatos
+    if days % 365 == 0:
+        years = days // 365
+        return f"{years} ano{'s' if years > 1 else ''}"
+
+    # Meses (aproximado)
+    if days == 31: # Caso especial para 1 mês
+        return "1 mês"
+    if days % 30 == 0:
+        months = days // 30
+        return f"{months} {'meses' if months > 1 else 'mês'}"
+
+    # Semanas exatas
+    if days % 7 == 0:
+        weeks = days // 7
+        return f"{weeks} semana{'s' if weeks > 1 else ''}"
+
+    # Padrão
+    return f"{days} dias"
+
 def calculate_daily_cdi(annual_cdi_percent: float) -> float:
     """Converte a taxa CDI anual para uma taxa diária."""
     annual_cdi = annual_cdi_percent / 100
@@ -144,25 +171,26 @@ if calculate_button:
 
         # --- Cards de Resumo ---
         st.header("Resumo da Simulação")
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         
-        col1.metric("Valor Investido", format_currency(initial_investment))
-        col2.metric("Valor Final", format_currency(final_value))
-        col3.metric(
+        col1.metric("Tempo do Investimento", format_period(days))
+        col2.metric("Valor Investido", format_currency(initial_investment))
+        col3.metric("Valor Final", format_currency(final_value))
+        col4.metric(
             f"Rendimento Total (99Pay)", 
             format_currency(total_yield), 
             f"{percent_yield:.2f}%"
         )
         
         if days >= 30:
-            col4.metric(
+            col5.metric(
                 "Rendimento Poupança (est.)",
                 format_currency(savings_yield),
                 f"{savings_percent_yield:.2f}%",
                 help="Estimativa com rendimento de 0.5% a.m. e sem considerar a Taxa Referencial (TR)."
             )
         else:
-            col4.metric(
+            col5.metric(
                 "Rendimento Poupança (est.)", 
                 "N/A", 
                 help="A poupança requer no mínimo 30 dias para render."
