@@ -98,7 +98,7 @@ with st.sidebar:
     )
     
     # CDI
-    DEFAULT_CDI = 14.90
+    DEFAULT_CDI = 11.15
     if 'cdi_rate' not in st.session_state:
         st.session_state.cdi_rate = DEFAULT_CDI
         
