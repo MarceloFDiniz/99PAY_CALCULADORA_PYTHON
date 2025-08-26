@@ -176,23 +176,36 @@ if calculate_button:
         col1.metric("Tempo do Investimento", format_period(days))
         col2.metric("Valor Investido", format_currency(initial_investment))
         col3.metric("Valor Final", format_currency(final_value))
+
+        # Lógica para colorir os deltas das métricas de forma comparativa
+        pay_color = "normal"  # Verde por padrão (para rendimento positivo)
+        savings_color = "normal"
+        if days >= 30:
+            if percent_yield > savings_percent_yield:
+                savings_color = "inverse"  # Vermelho para o menor rendimento
+            elif savings_percent_yield > percent_yield:
+                pay_color = "inverse"  # Vermelho para o menor rendimento
+            # Se forem iguais, ambos permanecem "normal" (verde)
+
         col4.metric(
-            f"Rendimento Total (99Pay)", 
-            format_currency(total_yield), 
-            f"{percent_yield:.2f}%"
+            "Rendimento Total (99Pay)",
+            format_currency(total_yield),
+            f"{percent_yield:.2f}%",
+            delta_color=pay_color
         )
-        
+
         if days >= 30:
             col5.metric(
                 "Rendimento Poupança (est.)",
                 format_currency(savings_yield),
                 f"{savings_percent_yield:.2f}%",
+                delta_color=savings_color,
                 help="Estimativa com rendimento de 0.5% a.m. e sem considerar a Taxa Referencial (TR)."
             )
         else:
             col5.metric(
-                "Rendimento Poupança (est.)", 
-                "N/A", 
+                "Rendimento Poupança (est.)",
+                "N/A",
                 help="A poupança requer no mínimo 30 dias para render."
             )
 
