@@ -95,6 +95,14 @@ st.markdown("Esta é uma versão em Python/Streamlit da calculadora, que simula 
 with st.sidebar:
     st.header("Parâmetros da Simulação")
     
+    # Inicialização dos estados para os inputs
+    DEFAULT_CDI = 14.90
+    if 'cdi_rate' not in st.session_state:
+        st.session_state.cdi_rate = DEFAULT_CDI
+    if 'bonus_percent' not in st.session_state:
+        # Define o valor inicial para o bônus no estado da sessão
+        st.session_state.bonus_percent = 0.0
+
     # Inputs
     initial_investment = st.number_input(
         "Valor Investido (R$)",
@@ -109,7 +117,7 @@ with st.sidebar:
     bonus_percent = st.number_input(
         "Bônus Adicional (%)",
         min_value=0.0,
-        value=0.0,
+        # O valor é lido diretamente de st.session_state.bonus_percent via a 'key'
         step=1.0,
         format="%.1f",
         key="bonus_percent"
@@ -123,12 +131,7 @@ with st.sidebar:
         step=1,
         key="days"
     )
-    
-    # CDI
-    DEFAULT_CDI = 14.90
-    if 'cdi_rate' not in st.session_state:
-        st.session_state.cdi_rate = DEFAULT_CDI
-        
+            
     def reset_cdi_callback():
         st.session_state.cdi_rate = DEFAULT_CDI
         
@@ -146,11 +149,19 @@ with st.sidebar:
     )
     
     st.markdown("---")
+
+    def clear_simulation_callback():
+        """Reseta os campos do formulário para o estado inicial."""
+        st.session_state.initial_investment = None
+        st.session_state.days = None
+        st.session_state.bonus_percent = 0.0
+        st.session_state.cdi_rate = DEFAULT_CDI
+
     col1, col2 = st.columns(2)
     with col1:
         calculate_button = st.button("Calcular Rendimento", type="primary", use_container_width=True)
     with col2:
-        st.button("Limpar Simulação", on_click=lambda: st.session_state.clear(), use_container_width=True)
+        st.button("Limpar Simulação", on_click=clear_simulation_callback, use_container_width=True)
 
 # --- Resultados ---
 if calculate_button:
