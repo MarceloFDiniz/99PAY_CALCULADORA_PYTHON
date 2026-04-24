@@ -4,7 +4,7 @@ import altair as alt
 
 # --- Configuração da Página ---
 st.set_page_config(
-    page_title="Calculadora 99Pay XXX",
+    page_title="Calculadora 99Pay",
     page_icon="💹",
     layout="wide"
 )
@@ -88,7 +88,7 @@ def calculate_99pay_returns(initial_investment: float, days: int, annual_cdi_per
     return pd.DataFrame(daily_data)
 
 # --- Interface do Usuário ---
-st.title("💹 Calculadora de Rendimentos 99 Pay")
+st.title("💹 Calculadora de Rendimentos 99 Pay XXX")
 st.markdown("Esta é uma versão em Python/Streamlit da calculadora, que simula os rendimentos compostos diários da carteira 99Pay.")
 
 # --- Barra Lateral ---
