@@ -4,7 +4,7 @@ import altair as alt
 
 # --- Configuração da Página ---
 st.set_page_config(
-    page_title="Calculadora 99Pay",
+    page_title="Calculadora 99Pay XXX",
     page_icon="💹",
     layout="wide"
 )
