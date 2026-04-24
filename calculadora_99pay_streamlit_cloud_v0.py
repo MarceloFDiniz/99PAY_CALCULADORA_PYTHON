@@ -88,7 +88,7 @@ def calculate_99pay_returns(initial_investment: float, days: int, annual_cdi_per
     return pd.DataFrame(daily_data)
 
 # --- Interface do Usuário ---
-st.title("💹 Calculadora de Rendimentos 99 Pay XXX")
+st.title("💹 Calculadora de Rendimentos 99 Pay")
 st.markdown("Esta é uma versão em Python/Streamlit da calculadora, que simula os rendimentos compostos diários da carteira 99Pay.")
 
 # --- Barra Lateral ---
